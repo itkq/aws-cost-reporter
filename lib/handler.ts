@@ -51,22 +51,30 @@ export const Run = async () => {
 }
 
 const buildWebhookArguments = (period: TimePeriod, costsPerService: CostPerService[]): IncomingWebhookSendArguments => {
-  return {
-    blocks: [
-      {
-        type: 'section',
-        text: {
+  let blocks: any = []; // TODO
+  blocks.push({
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: `AWS Cost (${period.Start} - ${period.End})`,
+    },
+  });
+
+  for (const chunk of EachSlice(costsPerService, 10)) { // no more than 10 items allowed
+    const block = {
+      type: 'section',
+      fields: chunk.map((c) => {
+        return {
           type: 'mrkdwn',
-          text: `AWS Cost (${period.Start} - ${period.End})`,
-        },
-        fields: costsPerService.map((c) => {
-          return {
-            type: 'mrkdwn',
-            text: `*${c.service}:* ${c.usd.toFixed(3)} USD`,
-          }
-        })
-      }
-    ],
+          text: `*${c.service}:* ${c.usd.toFixed(3)} USD`,
+        }
+      })
+    };
+    blocks.push(block);
+  }
+
+  return {
+    blocks: blocks,
   }
 }
 
@@ -93,3 +101,17 @@ const envFetch = (key: string, defaultValue = ''): string => {
 
   return v;
 }
+
+const EachSlice = (arr: Array<any>, n: number): Array<Array<any>> => {
+  let dup = [...arr]
+  let result = [];
+  let length = dup.length;
+
+  while (0 < length) {
+    result.push(dup.splice(0, n));
+    length = dup.length
+  }
+
+  return result;
+}
+
