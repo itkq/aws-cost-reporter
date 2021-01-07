@@ -32,7 +32,8 @@
     "@types/dateformat": "^3.0.1",
     "aws-sdk": "^2.804.0",
     "dateformat": "^4.2.2",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "^0.5.16",
+    "tslog": "^3.0.5"
   },
   "license": "MIT",
   "repository": "https://github.com/itkq/aws-cost-reporter"

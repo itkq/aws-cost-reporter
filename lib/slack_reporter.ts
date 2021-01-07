@@ -1,15 +1,19 @@
 import { IncomingWebhook, IncomingWebhookSendArguments } from '@slack/webhook';
 import { CostPerService, TimePeriod } from './cost';
+import { Logger } from 'tslog';
 
 export class SlackReporter {
   webhook: IncomingWebhook;
+  logger: Logger;
 
   constructor(webhookUrl: string) {
     this.webhook = new IncomingWebhook(webhookUrl);
+    this.logger = new Logger();
   }
 
   async Report(timePeriod: TimePeriod, costsPerService: CostPerService[]) {
     const payload = this.buildWebhookArguments(timePeriod, costsPerService);
+    this.logger.debug(payload);
     await this.webhook.send(payload);
   }
 
