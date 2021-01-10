@@ -18,12 +18,13 @@ export class SlackReporter {
   }
 
   private buildWebhookArguments(period: TimePeriod, costsPerService: CostPerService[]): IncomingWebhookSendArguments {
+    const total = costsPerService.map(c => c.usd).reduce((acc, curr) => acc + curr).toFixed(3);
     let blocks: any = []; // TODO
     blocks.push({
       type: 'section',
       text: {
         type: 'mrkdwn',
-        text: `AWS Cost (${period.Start} - ${period.End})`,
+        text: `AWS Cost (${period.Start} - ${period.End}): ${total} USD`,
       },
     });
 
