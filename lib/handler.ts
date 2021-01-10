@@ -49,7 +49,8 @@ export const Run = async () => {
   const promises = reporters.map((r) => {
     return r.Report(timePeriod, costsPerService)
   })
-  Promise.all(promises).catch((e) => {
+  
+  await Promise.all(promises).catch((e) => {
     throw e;
   })
 }
